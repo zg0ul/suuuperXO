@@ -1,0 +1,89 @@
+# This file configures the analyzer, which statically analyzes Dart code to
+# check for errors, warnings, and lints.
+#
+# The following line activates a set of recommended lints for Flutter apps,
+# packages, and plugins designed to encourage good coding practices.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.mocks.dart"
+    - "**/build/**"
+    - "**/generated/**"
+    - "**/*.gr.dart"
+    - "**/generated_plugin_registrant.dart"
+    - "android/**"
+    - "ios/Flutter/**"
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    # Treat missing required parameters as errors
+    missing_required_param: error
+    # Treat invalid assignments as errors
+    invalid_assignment: error
+    # Make these warnings instead of hints
+    unused_import: warning
+    unused_local_variable: warning
+    invalid_annotation_target: ignore
+
+linter:
+  rules:
+    # FORMATTING & STYLE
+    prefer_single_quotes: false              # Use single quotes for strings
+    require_trailing_commas: true           # Always require trailing commas
+    curly_braces_in_flow_control_structures: true
+    sort_pub_dependencies: false
+    always_use_package_imports: true
+    
+    # PERFORMANCE & EFFICIENCY
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    avoid_unnecessary_containers: true
+    cancel_subscriptions: true
+    
+    # CODE QUALITY
+    prefer_final_locals: true               # Use final for local variables when possible
+    prefer_final_fields: true               # Use final for fields when possible
+    prefer_final_in_for_each: true          # Use final in for-each loops
+    unnecessary_late: true                  # Avoid unnecessary late keyword
+    avoid_print: true                       # Use proper logging instead of print
+    avoid_empty_else: true                  # Remove empty else blocks
+    prefer_is_empty: true                   # Use isEmpty instead of length == 0
+    prefer_is_not_empty: true               # Use isNotEmpty instead of length != 0
+    
+    
+    # NULL SAFETY
+    prefer_null_aware_operators: true       # Use ?. and ?? operators
+    unnecessary_null_checks: true           # Remove redundant null checks
+    unnecessary_null_in_if_null_operators: true
+    prefer_if_null_operators: true          # Use ?? instead of conditional expressions
+    
+    # FUNCTIONS & METHODS
+    prefer_function_declarations_over_variables: true
+    avoid_positional_boolean_parameters: true
+    avoid_bool_literals_in_conditional_expressions: true
+    prefer_conditional_assignment: true
+    prefer_if_elements_to_conditional_expressions: true
+    prefer_inlined_adds: true               # Use collection literals when possible
+    prefer_spread_collections: true        # Use spread operator
+    
+    # ASYNC PROGRAMMING
+    unawaited_futures: true                 # Flag unawaited async calls
+    
+    # FLUTTER SPECIFIC
+    use_build_context_synchronously: true   # Avoid using BuildContext across async gaps
+
+    close_sinks: true
+
+
+# Formatter configuration
+formatter:
+  page_width: 120                            # Maximum line length
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
