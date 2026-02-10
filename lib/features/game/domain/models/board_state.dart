@@ -14,4 +14,9 @@ class BoardState with _$BoardState {
   }) = _BoardState;
 
   factory BoardState.fromJson(Map<String, dynamic> json) => _$BoardStateFromJson(json);
+
+  factory BoardState.initial() => BoardState(
+        cells: List.generate(9, (index) => CellState.initial()),
+        status: BoardStatus.active,
+      );
 }

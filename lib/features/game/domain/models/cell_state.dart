@@ -11,4 +11,6 @@ abstract class CellState with _$CellState {
   }) = _CellState;
 
   factory CellState.fromJson(Map<String, dynamic> json) => _$CellStateFromJson(json);
+
+  factory CellState.initial() => const CellState(owner: null);
 }

@@ -29,4 +29,16 @@ abstract class GameState with _$GameState {
   }) = _GameState;
 
   factory GameState.fromJson(Map<String, dynamic> json) => _$GameStateFromJson(json);
+
+  factory GameState.initial() => GameState(
+        boards: List.generate(9, (index) => BoardState.initial()),
+        currentPlayer: Player.playerOne,
+        winner: null,
+        nextBoardIndex: null,
+        status: GameStatus.waiting,
+        createdAt: DateTime.now(),
+        lastMoveAt: DateTime.now(),
+        mode: GameMode.classic,
+        isOnline: false,
+      );
 }
