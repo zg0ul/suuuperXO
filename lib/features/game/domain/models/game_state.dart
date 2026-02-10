@@ -35,7 +35,7 @@ abstract class GameState with _$GameState {
         currentPlayer: Player.playerOne,
         winner: null,
         nextBoardIndex: null,
-        status: GameStatus.waiting,
+        status: GameStatus.playing,
         createdAt: DateTime.now(),
         lastMoveAt: DateTime.now(),
         mode: GameMode.classic,
