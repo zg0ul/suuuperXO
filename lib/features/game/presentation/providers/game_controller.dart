@@ -23,4 +23,8 @@ class GameController extends _$GameController {
     // Apply the move
     state = repo.makeMove(state, boardIndex, cellIndex);
   }
+
+  void resetGame() {
+    state = GameState.initial();
+  }
 }
