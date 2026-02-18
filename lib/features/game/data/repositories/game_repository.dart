@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:suuuperxo/features/game/domain/enums/player_enum.dart';
 import 'package:suuuperxo/features/game/domain/models/board_state.dart';
+import 'package:suuuperxo/features/game/domain/models/cell_state.dart';
 import 'package:suuuperxo/features/game/domain/models/game_state.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -83,10 +84,6 @@ class GameRepository {
     return true;
   }
 
-  GameState makeMove(GameState state, int boardIndex, int cellIndex) {
-    return state;
-  }
-
   /// Determines the current status of a small board.
   ///
   /// Checks all possible winning patterns (3 rows, 3 columns, 2 diagonals)
@@ -157,5 +154,94 @@ class GameRepository {
     final allBoardsFinished = state.boards.every((board) => board.status != BoardStatus.active);
 
     return allBoardsFinished ? GameResult.tied : GameResult.inProgress;
+  }
+
+  /// Applies a move and returns a new game state.
+  ///
+  /// This is a PURE function - it does not modify the input [state].
+  /// Instead, it creates and returns a completely new [GameState] object
+  /// with the move applied. The original state remains unchanged.
+  ///
+  /// **Prerequisites:**
+  /// - The move MUST be validated using [isValidMove] before calling this method
+  /// - This method assumes the move is legal and will apply it unconditionally
+  ///
+  /// **Operations Performed:**
+  /// 1. **Mark Cell**: Sets the target cell's owner to the current player
+  /// 2. **Check Board Status**: Determines if the board is won, tied, or active
+  /// 3. **Calculate Next Board**: Determines where opponent must play next
+  /// 4. **Check Game Status**: Determines if the game is won, tied, or continues
+  /// 5. **Switch Player**: Changes to the next player
+  /// 6. **Update Timestamp**: Records the move time
+  ///
+  /// **The "Next Board" Rule:**
+  /// The cell you play in determines which board your opponent plays on next:
+  /// - Play in cell 4 → opponent must play on board 4
+  /// - Play in cell 7 → opponent must play on board 7
+  /// - If that board is completed → opponent can choose any active board (null)
+  ///
+  /// Example:
+  /// ```dart
+  /// final oldState = GameState.initial();
+  /// final newState = repo.makeMove(oldState, boardIndex: 0, cellIndex: 4);
+  ///
+  /// // oldState is unchanged
+  /// // newState has the move applied
+  /// ```
+  ///
+  /// Parameters:
+  /// - [state]: Current game state (will NOT be modified)
+  /// - [boardIndex]: Board to play on (0-8)
+  /// - [cellIndex]: Cell within that board (0-8)
+  ///
+  /// Returns: New [GameState] with the move applied
+  GameState makeMove(GameState state, int boardIndex, int cellIndex) {
+    // Create a mutable working copy of the boards list
+    final updatedBoards = List<BoardState>.from(state.boards);
+
+    // Get the board that's being played on
+    final targetBoard = updatedBoards[boardIndex];
+
+    // Create a mutable copy of that board's cells
+    final updatedCells = List<CellState>.from(targetBoard.cells);
+
+    // Mark the played cell with current player's symbol
+    updatedCells[cellIndex] = updatedCells[cellIndex].copyWith(owner: state.currentPlayer);
+
+    // Create new BoardState with updated cells
+    final updatedBoard = targetBoard.copyWith(cells: updatedCells);
+
+    // Check if this board is now won, tied, or still active
+    final newBoardStatus = checkBoardWinner(updatedBoard);
+
+    // Update the board's status and put it back in the boards list
+    updatedBoards[boardIndex] = updatedBoard.copyWith(status: newBoardStatus);
+
+    // Determine where opponent must play next
+    // Rule: The cell index determines the next board index
+    final potentialNextBoard = cellIndex; // Cell 0→Board 0, Cell 4→Board 4, etc.
+
+    // Check if that board is actually playable
+    // If opponent is sent to a won/tied board, they can choose any active board
+    final targetBoardStatus = updatedBoards[potentialNextBoard].status;
+    final nextBoardIndex = targetBoardStatus == BoardStatus.active
+        ? potentialNextBoard // Opponent must play on this specific board
+        : null; // Opponent can choose any active board
+
+    // Check if the game is now won or tied
+    final intermediateState = state.copyWith(boards: updatedBoards);
+    final gameResult = checkGameWinner(intermediateState);
+
+    // Toggle to next player
+    final nextPlayer = state.currentPlayer == Player.playerOne ? Player.playerTwo : Player.playerOne;
+
+    // Return completely new GameState with all changes
+    return state.copyWith(
+      boards: updatedBoards,
+      currentPlayer: nextPlayer,
+      nextBoardIndex: nextBoardIndex,
+      result: gameResult,
+      lastMoveAt: DateTime.now(),
+    );
   }
 }
