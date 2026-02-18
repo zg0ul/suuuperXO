@@ -12,9 +12,9 @@ _$GameStateImpl _$$GameStateImplFromJson(Map<String, dynamic> json) =>
           .map((e) => BoardState.fromJson(e as Map<String, dynamic>))
           .toList(),
       currentPlayer: $enumDecode(_$PlayerEnumMap, json['currentPlayer']),
-      winner: $enumDecodeNullable(_$PlayerEnumMap, json['winner']),
       nextBoardIndex: (json['nextBoardIndex'] as num?)?.toInt(),
       status: $enumDecode(_$GameStatusEnumMap, json['status']),
+      result: $enumDecode(_$GameResultEnumMap, json['result']),
       createdAt: DateTime.parse(json['createdAt'] as String),
       lastMoveAt: json['lastMoveAt'] == null
           ? null
@@ -27,9 +27,9 @@ Map<String, dynamic> _$$GameStateImplToJson(_$GameStateImpl instance) =>
     <String, dynamic>{
       'boards': instance.boards,
       'currentPlayer': _$PlayerEnumMap[instance.currentPlayer]!,
-      'winner': _$PlayerEnumMap[instance.winner],
       'nextBoardIndex': instance.nextBoardIndex,
       'status': _$GameStatusEnumMap[instance.status]!,
+      'result': _$GameResultEnumMap[instance.result]!,
       'createdAt': instance.createdAt.toIso8601String(),
       'lastMoveAt': instance.lastMoveAt?.toIso8601String(),
       'mode': _$GameModeEnumMap[instance.mode]!,
@@ -44,8 +44,14 @@ const _$PlayerEnumMap = {
 const _$GameStatusEnumMap = {
   GameStatus.waiting: 'waiting',
   GameStatus.playing: 'playing',
-  GameStatus.finished: 'finished',
   GameStatus.abandoned: 'abandoned',
+};
+
+const _$GameResultEnumMap = {
+  GameResult.inProgress: 'inProgress',
+  GameResult.wonByPlayerOne: 'wonByPlayerOne',
+  GameResult.wonByPlayerTwo: 'wonByPlayerTwo',
+  GameResult.tied: 'tied',
 };
 
 const _$GameModeEnumMap = {

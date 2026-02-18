@@ -8,8 +8,14 @@ part 'game_state.g.dart';
 enum GameStatus {
   waiting, // Waiting for second player (online)
   playing, // Game in progress
-  finished, // Game completed normally
   abandoned, // Player disconnected/quit
+}
+
+enum GameResult {
+  inProgress, // Game still being played
+  wonByPlayerOne, // Player One won
+  wonByPlayerTwo, // Player Two won
+  tied, // No winner possible
 }
 
 enum GameMode { classic, wild, speed, tournament }
@@ -19,9 +25,9 @@ abstract class GameState with _$GameState {
   const factory GameState({
     required List<BoardState> boards, // 9 small boards
     required Player currentPlayer,
-    required Player? winner, // null means game is not finished yet
     required int? nextBoardIndex, // null = can play anywhere
     required GameStatus status,
+    required GameResult result,
     required DateTime createdAt,
     required DateTime? lastMoveAt,
     required GameMode mode,
@@ -33,9 +39,9 @@ abstract class GameState with _$GameState {
   factory GameState.initial() => GameState(
         boards: List.generate(9, (index) => BoardState.initial()),
         currentPlayer: Player.playerOne,
-        winner: null,
         nextBoardIndex: null,
         status: GameStatus.playing,
+        result: GameResult.inProgress,
         createdAt: DateTime.now(),
         lastMoveAt: DateTime.now(),
         mode: GameMode.classic,

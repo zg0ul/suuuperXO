@@ -24,11 +24,10 @@ mixin _$GameState {
   List<BoardState> get boards =>
       throw _privateConstructorUsedError; // 9 small boards
   Player get currentPlayer => throw _privateConstructorUsedError;
-  Player? get winner =>
-      throw _privateConstructorUsedError; // null means game is not finished yet
   int? get nextBoardIndex =>
       throw _privateConstructorUsedError; // null = can play anywhere
   GameStatus get status => throw _privateConstructorUsedError;
+  GameResult get result => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime? get lastMoveAt => throw _privateConstructorUsedError;
   GameMode get mode => throw _privateConstructorUsedError;
@@ -52,9 +51,9 @@ abstract class $GameStateCopyWith<$Res> {
   $Res call({
     List<BoardState> boards,
     Player currentPlayer,
-    Player? winner,
     int? nextBoardIndex,
     GameStatus status,
+    GameResult result,
     DateTime createdAt,
     DateTime? lastMoveAt,
     GameMode mode,
@@ -79,9 +78,9 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
   $Res call({
     Object? boards = null,
     Object? currentPlayer = null,
-    Object? winner = freezed,
     Object? nextBoardIndex = freezed,
     Object? status = null,
+    Object? result = null,
     Object? createdAt = null,
     Object? lastMoveAt = freezed,
     Object? mode = null,
@@ -97,10 +96,6 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
                 ? _value.currentPlayer
                 : currentPlayer // ignore: cast_nullable_to_non_nullable
                       as Player,
-            winner: freezed == winner
-                ? _value.winner
-                : winner // ignore: cast_nullable_to_non_nullable
-                      as Player?,
             nextBoardIndex: freezed == nextBoardIndex
                 ? _value.nextBoardIndex
                 : nextBoardIndex // ignore: cast_nullable_to_non_nullable
@@ -109,6 +104,10 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as GameStatus,
+            result: null == result
+                ? _value.result
+                : result // ignore: cast_nullable_to_non_nullable
+                      as GameResult,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -143,9 +142,9 @@ abstract class _$$GameStateImplCopyWith<$Res>
   $Res call({
     List<BoardState> boards,
     Player currentPlayer,
-    Player? winner,
     int? nextBoardIndex,
     GameStatus status,
+    GameResult result,
     DateTime createdAt,
     DateTime? lastMoveAt,
     GameMode mode,
@@ -169,9 +168,9 @@ class __$$GameStateImplCopyWithImpl<$Res>
   $Res call({
     Object? boards = null,
     Object? currentPlayer = null,
-    Object? winner = freezed,
     Object? nextBoardIndex = freezed,
     Object? status = null,
+    Object? result = null,
     Object? createdAt = null,
     Object? lastMoveAt = freezed,
     Object? mode = null,
@@ -187,10 +186,6 @@ class __$$GameStateImplCopyWithImpl<$Res>
             ? _value.currentPlayer
             : currentPlayer // ignore: cast_nullable_to_non_nullable
                   as Player,
-        winner: freezed == winner
-            ? _value.winner
-            : winner // ignore: cast_nullable_to_non_nullable
-                  as Player?,
         nextBoardIndex: freezed == nextBoardIndex
             ? _value.nextBoardIndex
             : nextBoardIndex // ignore: cast_nullable_to_non_nullable
@@ -199,6 +194,10 @@ class __$$GameStateImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as GameStatus,
+        result: null == result
+            ? _value.result
+            : result // ignore: cast_nullable_to_non_nullable
+                  as GameResult,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -226,9 +225,9 @@ class _$GameStateImpl implements _GameState {
   const _$GameStateImpl({
     required final List<BoardState> boards,
     required this.currentPlayer,
-    required this.winner,
     required this.nextBoardIndex,
     required this.status,
+    required this.result,
     required this.createdAt,
     required this.lastMoveAt,
     required this.mode,
@@ -250,13 +249,12 @@ class _$GameStateImpl implements _GameState {
   @override
   final Player currentPlayer;
   @override
-  final Player? winner;
-  // null means game is not finished yet
-  @override
   final int? nextBoardIndex;
   // null = can play anywhere
   @override
   final GameStatus status;
+  @override
+  final GameResult result;
   @override
   final DateTime createdAt;
   @override
@@ -269,7 +267,7 @@ class _$GameStateImpl implements _GameState {
 
   @override
   String toString() {
-    return 'GameState(boards: $boards, currentPlayer: $currentPlayer, winner: $winner, nextBoardIndex: $nextBoardIndex, status: $status, createdAt: $createdAt, lastMoveAt: $lastMoveAt, mode: $mode, isOnline: $isOnline)';
+    return 'GameState(boards: $boards, currentPlayer: $currentPlayer, nextBoardIndex: $nextBoardIndex, status: $status, result: $result, createdAt: $createdAt, lastMoveAt: $lastMoveAt, mode: $mode, isOnline: $isOnline)';
   }
 
   @override
@@ -280,10 +278,10 @@ class _$GameStateImpl implements _GameState {
             const DeepCollectionEquality().equals(other._boards, _boards) &&
             (identical(other.currentPlayer, currentPlayer) ||
                 other.currentPlayer == currentPlayer) &&
-            (identical(other.winner, winner) || other.winner == winner) &&
             (identical(other.nextBoardIndex, nextBoardIndex) ||
                 other.nextBoardIndex == nextBoardIndex) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.result, result) || other.result == result) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.lastMoveAt, lastMoveAt) ||
@@ -299,9 +297,9 @@ class _$GameStateImpl implements _GameState {
     runtimeType,
     const DeepCollectionEquality().hash(_boards),
     currentPlayer,
-    winner,
     nextBoardIndex,
     status,
+    result,
     createdAt,
     lastMoveAt,
     mode,
@@ -326,9 +324,9 @@ abstract class _GameState implements GameState {
   const factory _GameState({
     required final List<BoardState> boards,
     required final Player currentPlayer,
-    required final Player? winner,
     required final int? nextBoardIndex,
     required final GameStatus status,
+    required final GameResult result,
     required final DateTime createdAt,
     required final DateTime? lastMoveAt,
     required final GameMode mode,
@@ -343,11 +341,11 @@ abstract class _GameState implements GameState {
   @override
   Player get currentPlayer;
   @override
-  Player? get winner; // null means game is not finished yet
-  @override
   int? get nextBoardIndex; // null = can play anywhere
   @override
   GameStatus get status;
+  @override
+  GameResult get result;
   @override
   DateTime get createdAt;
   @override
